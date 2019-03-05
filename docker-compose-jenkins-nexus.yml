@@ -1,0 +1,28 @@
+version: '2.1'
+services:
+  atd-jenkins:
+    build: ./docker/ci/jenkins
+    container_name: atd-jenkins
+    image: tiger154/atd-jenkins
+    ports:
+     - "8096:8080"
+     - "50000:50000"
+     - "7723:7722"
+    dns:
+     - "8.8.8.8"
+    volumes:
+     - atd-jenkins:/var/jenkins_home
+     - /server/volume/jenkins_output:/var/jenkins_output
+  atd-nexus:
+      build: ./docker/repository/nexus
+      container_name: atd-nexus
+      image: tiger154/atd-nexus
+      volumes:
+        - nexus-data:/nexus-data
+      ports:
+        - "8081:8081"
+      environment:
+        JAVA_OPTS: "-Xms256M -Xmx256M -XX:MaxDirectMemorySize=512M"
+volumes:
+    atd-jenkins:
+    nexus-data:
